@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DiplomeController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 
 // ------------------------------------------------------------
@@ -26,4 +28,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Étape A du pipeline : reçoit et sauvegarde l'image du diplôme.
+    Route::post('/diplomes/verifier', [DiplomeController::class, 'verifier']);
 });
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetCode']);
+Route::post('/verify-reset-code', [PasswordResetController::class, 'verifyCode']);
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
