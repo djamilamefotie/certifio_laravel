@@ -37,5 +37,17 @@ return [
 
     'gemini' => [
         'key' => env('GEMINI_API_KEY'),
+         'key_secours' => env('GEMINI_API_KEY_SECOURS'),
     ],
+    'monetbil' => [
+      'service_key' => env('MONETBIL_SERVICE_KEY'),
+      'service_secret' => env('MONETBIL_SERVICE_SECRET'),
+      'api_url' => env('MONETBIL_API_URL', 'https://api.monetbil.com/widget/v2.1'),
+      'devise' => env('MONETBIL_DEVISE', 'XAF'),
+      'pays' => env('MONETBIL_PAYS', 'CM'),
+      'notify_url' => env('MONETBIL_NOTIFY_URL'),
+      'return_url' => env('MONETBIL_RETURN_URL'),
+      'abonnement_montant' => (int) env('ABONNEMENT_PREMIUM_MONTANT', 1000),
+      'abonnement_duree_jours' => (int) env('ABONNEMENT_PREMIUM_DUREE_JOURS', 30),
+ ],
 ];

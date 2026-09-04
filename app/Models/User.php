@@ -16,6 +16,8 @@ use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
 /**
  * @property int $id
@@ -37,9 +39,9 @@ use Laravel\Sanctum\HasApiTokens;
  * @property-read Collection<int, Membership> $teamMemberships
  * @property-read Collection<int, Team> $teams
  */
-#[Fillable(['name', 'email', 'password', 'current_team_id', 'categorie'])]
+#[Fillable(['name', 'email', 'password', 'current_team_id', 'categorie', 'fcm_token', 'statut', 'abonnement', 'abonnement_expire_le', 'periode_gratuite_debut'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
-class User extends Authenticatable implements PasskeyUser
+class User extends Authenticatable implements PasskeyUser, FilamentUser
 {
 /** @use HasFactory<UserFactory> */
 use HasApiTokens, HasFactory, HasTeams, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
@@ -57,4 +59,8 @@ return [
 'two_factor_confirmed_at' => 'datetime',
         ];
     }
+ public function canAccessPanel(Panel $panel): bool
+ {
+    return $this->categorie === 'administrateur';
+ }    
 }
