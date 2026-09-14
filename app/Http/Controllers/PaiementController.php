@@ -58,6 +58,39 @@ class PaiementController extends Controller
     {
         return response()->json([
             'message' => 'Merci, votre paiement est en cours de traitement. Retournez sur l\'application Certifio.',
-        ]);
+        ]);<?php
+
+namespace App\Observers;
+
+use App\Models\Verification;
+use App\Services\FraudeNotificationService;
+
+class VerificationObserver
+{
+    public function __construct(private FraudeNotificationService $notifier) {}
+
+    public function updated(Verification $verification)
+    {
+        // On notifie seulement quand le statut change ET que le résultat
+        // n'est plus "ambigu" (donc le traitement est terminé).
+        if ($verification->wasChanged('statut') && $verification->statut !== 'ambigu') {
+
+            $client = $verification->diplome->client;
+
+            $libelles = [
+                'authentique' => 'authentique',
+                'suspect' => 'suspect',
+            ];
+
+            $libelle = $libelles[$verification->statut] ?? $verification->statut;
+
+            $this->notifier->alerterFraude(
+                $client,
+                (string) $verification->id,
+                "Résultat disponible : votre diplôme a été jugé {$libelle}."
+            );
+        }
+    }
+}
     }
 }
